@@ -1,0 +1,627 @@
+/* ==========================================================================
+   components.css
+   Layer 4 — UI components
+
+   SOFTWARE DESIGN PRINCIPLE: Open/Closed Principle (OCP)
+   Every component has a BASE class (.btn, .card, .badge, .pill, .eyebrow)
+   that is CLOSED for modification — you should never edit the base to
+   add brand-specific logic. Instead, EXTEND with a modifier class
+   (.btn--primary, .card--dark, .badge--lg) that is layered on top.
+
+   This means:
+   - Adding a new button style = add .btn--new (open for extension)
+   - Never editing .btn itself to change one variant (closed for modification)
+
+   SINGLE RESPONSIBILITY:
+   .card handles card layout/frame only.
+   .card__badge handles the badge inside it only.
+   .card__name handles the name text only.
+   Each element class is responsible for exactly one part of the component.
+   ========================================================================== */
+
+
+/* ══════════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════════ */
+
+/* Base navbar — layout and positioning only */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--gutter-page);
+    height: var(--navbar-height);
+    position: relative;
+    z-index: 10;
+}
+
+/* Navbar filled with brand color (most common use) */
+.navbar--brand {
+    background: var(--color-burgundy);
+}
+
+/* Logo mark */
+.navbar__logo {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+}
+
+.navbar__logo-main {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-white);
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.navbar__logo-sub {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-gold);
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Nav links */
+.navbar__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    list-style: none;
+}
+
+.navbar__link {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    color: rgba(245, 239, 230, 0.85);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.navbar__link:hover {
+    color: var(--color-white);
+}
+
+/* Thin gold accent line below the navbar */
+.navbar__rule {
+    width: 100%;
+    height: 1px;
+    background: var(--color-gold);
+    opacity: 0.4;
+}
+
+
+/* ══════════════════════════════════════════════
+   BUTTON
+   Base: .btn
+   Modifiers: .btn--primary  .btn--outline  .btn--gold
+══════════════════════════════════════════════ */
+
+/* Base — shared shape, size, and interaction */
+.btn {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    padding: 14px var(--space-6);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+/* Modifier: solid burgundy */
+.btn--primary {
+    background: var(--color-burgundy);
+    color: var(--color-cream);
+}
+.btn--primary:hover {
+    background: var(--color-burgundy-mid);
+}
+
+/* Modifier: ghost outline — matches the reference "About Us >" button style */
+.btn--outline {
+    background: transparent;
+    color: var(--color-charcoal);
+    border: 1px solid var(--color-charcoal);
+    padding: 13px 28px;
+}
+.btn--outline:hover {
+    background: var(--color-charcoal);
+    color: var(--color-cream);
+}
+
+/* Modifier: gold CTA (used in navbar) */
+.btn--gold {
+    background: var(--color-gold);
+    color: var(--color-burgundy-dark);
+    font-size: var(--font-size-sm);
+    padding: 10px 20px;
+    border-radius: var(--radius-sm);
+}
+.btn--gold:hover {
+    opacity: 0.88;
+}
+
+
+/* ══════════════════════════════════════════════
+   EYEBROW
+   A small labeling row used to introduce sections.
+   Base: .eyebrow
+   Modifiers: .eyebrow--light (on dark bg)
+══════════════════════════════════════════════ */
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.eyebrow__text {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--color-gold);
+}
+
+/* Rule line pulled from utilities (.rule-gold) */
+
+
+/* ══════════════════════════════════════════════
+   SEARCH BAR
+   Base: .search-bar
+══════════════════════════════════════════════ */
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--color-white);
+    border-radius: var(--radius-pill);
+    padding: 14px 20px;
+    width: 560px;
+    max-width: 100%;
+}
+
+.search-bar__icon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-gold);
+    flex-shrink: 0;
+    stroke-width: 2;
+}
+
+.search-bar__input {
+    border: none;
+    outline: none;
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-light);
+    color: var(--color-charcoal);
+    background: transparent;
+    width: 100%;
+}
+
+.search-bar__input::placeholder {
+    color: #C4A9A0;
+}
+
+
+/* ══════════════════════════════════════════════
+   FILTER PILL
+   Base: .filter-pill
+   Modifiers: .filter-pill--active
+══════════════════════════════════════════════ */
+
+.filter-pill {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    border-radius: var(--radius-pill);
+    padding: 9px 18px;
+    cursor: pointer;
+    border: var(--border-subtle);
+    background: transparent;
+    color: rgba(245, 239, 230, 0.82);
+    transition:
+            background var(--transition-fast),
+            color var(--transition-fast),
+            border-color var(--transition-fast);
+}
+
+.filter-pill:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.6);
+    color: var(--color-white);
+}
+
+/* Modifier: currently selected */
+.filter-pill--active {
+    background: var(--color-white);
+    border-color: var(--color-white);
+    color: var(--color-burgundy);
+}
+
+
+/* ══════════════════════════════════════════════
+   PILL / TAG
+   Inline label pill.
+   Base: .pill
+   Modifiers: .pill--gold  .pill--burgundy  .pill--subtle
+══════════════════════════════════════════════ */
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    padding: 3px var(--space-2);
+    border-radius: var(--radius-sm);
+}
+
+.pill--gold {
+    color: var(--color-gold-dark);
+    background: var(--color-gold-tint);
+}
+
+.pill--burgundy {
+    color: var(--color-burgundy);
+    background: var(--color-burgundy-tint);
+    border: var(--border-brand);
+}
+
+.pill--subtle {
+    color: var(--color-muted);
+    background: var(--color-cream);
+}
+
+
+/* ══════════════════════════════════════════════
+   BADGE (circular initials/logo)
+   Base: .badge
+   Modifiers: .badge--sm  .badge--lg  .badge--dark  .badge--ghost
+══════════════════════════════════════════════ */
+
+/* Base */
+.badge {
+    width: 54px;
+    height: 54px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+    flex-shrink: 0;
+}
+
+/* Modifier: brand colours (default on light bg) */
+.badge--brand {
+    background: var(--color-burgundy-tint);
+    border: var(--border-brand);
+    color: var(--color-burgundy);
+}
+
+/* Modifier: ghost (on dark bg) */
+.badge--ghost {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    color: var(--color-white);
+}
+
+/* Modifier: square (used in list views) */
+.badge--square {
+    border-radius: var(--radius-md);
+    background: var(--color-burgundy);
+    color: var(--color-white);
+    border: none;
+}
+
+/* Size modifiers */
+.badge--sm { width: 36px; height: 36px; font-size: 9px; }
+.badge--lg { width: 68px; height: 68px; font-size: var(--font-size-md); }
+
+
+/* ══════════════════════════════════════════════
+   CARD
+   Base: .card
+   Modifiers: .card--dark  .card--flat  .card--featured
+   Elements:  .card__accent .card__body .card__top .card__name
+              .card__desc   .card__link .card__tag .card__badge
+
+   OPEN/CLOSED at work:
+   .card  ← closed. Never modify this to add a brand-specific layout.
+   .card--dark ← open extension for dark variant.
+   .card--featured ← open extension for highlighted state.
+   ========================================================================= */
+
+/* Base — shared frame, shadow, interaction */
+.card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    border: var(--border-default);
+    box-shadow: var(--shadow-sm);
+    transition:
+            box-shadow var(--transition-base),
+            transform  var(--transition-base);
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* Modifier: horizontal layout (A-style) */
+.card--horizontal {
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-5) var(--space-5) 0;
+    border-left: var(--border-brand-thick);
+    border-radius: var(--radius-lg);
+    min-height: unset;
+}
+
+/* Modifier: dark luxury */
+.card--dark {
+    background: var(--color-burgundy-dark);
+    border-color: rgba(200, 168, 75, 0.25);
+    color: var(--color-cream);
+}
+
+/* Modifier: featured / highlighted */
+.card--featured {
+    border: 2px solid var(--color-burgundy);
+    box-shadow: var(--shadow-md);
+}
+
+/* Modifier: flat (no shadow, no hover lift) */
+.card--flat {
+    box-shadow: none;
+}
+.card--flat:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+/* ── Card elements ────────────────────────────────────────────────────────── */
+
+/* Left accent bar — shown in vertical layout */
+.card__accent {
+    width: 3px;
+    background: var(--color-burgundy);
+    flex-shrink: 0;
+}
+
+/* Left badge column — shown in horizontal layout */
+.card__badge-col {
+    margin-left: var(--space-5);
+    flex-shrink: 0;
+}
+
+/* Body text area */
+.card__body {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+    min-width: 0;
+}
+
+/* In horizontal layout the body has no padding (card handles it) */
+.card--horizontal .card__body {
+    padding: 0;
+}
+
+/* Top row: badge left, tag right */
+.card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+}
+
+/* Company name */
+.card__name {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-charcoal);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Short description */
+.card__desc {
+    font-size: var(--font-size-sm);
+    color: var(--color-muted);
+    line-height: var(--line-height-normal);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* "View Profile →" link */
+.card__link {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-burgundy);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    text-decoration: none;
+    margin-top: var(--space-2);
+    transition: opacity var(--transition-fast);
+}
+
+.card__link:hover {
+    opacity: 0.72;
+}
+
+/* Dark card overrides for text colours */
+.card--dark .card__name { color: var(--color-cream); }
+.card--dark .card__desc { color: rgba(245, 239, 230, 0.55); }
+.card--dark .card__link { color: var(--color-gold); }
+
+
+/* ══════════════════════════════════════════════
+   SECTOR GROUP
+══════════════════════════════════════════════ */
+
+.sector {
+    display: flex;
+    flex-direction: column;
+}
+
+.sector__heading {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: 14px;
+}
+
+.sector__name {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-charcoal);
+}
+
+.sector__count {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-muted);
+}
+
+.sector__rule {
+    height: 1px;
+    background: var(--color-cream-border);
+    margin-bottom: var(--space-6);
+}
+
+.sector__cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+}
+
+
+/* ══════════════════════════════════════════════
+   STAT BLOCK
+   Base: .stat
+   Modifiers: .stat--lg (display-size numbers)
+══════════════════════════════════════════════ */
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.stat__number {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-cream);
+    line-height: 1;
+}
+
+/* Modifier: large (companies section stats bar) */
+.stat--lg .stat__number {
+    font-size: var(--font-size-display);
+}
+
+.stat__label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+}
+
+
+/* ══════════════════════════════════════════════
+   SECTION HEADLINE GROUP
+   Reusable heading + rule + sub pattern
+══════════════════════════════════════════════ */
+
+.headline-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.headline-group__title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+}
+
+/* On light background */
+.headline-group__title--dark   { color: var(--color-charcoal); }
+
+/* On dark (burgundy) background */
+.headline-group__title--light  { color: var(--color-cream); }
+
+.headline-group__rule {
+    width: 80px;
+    height: 1px;
+    background: var(--color-gold);
+}
+
+.headline-group__sub {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-relaxed);
+    color: rgba(245, 239, 230, 0.82);
+    max-width: 680px;
+}
+
+.headline-group__sub--dark { color: var(--color-muted); }
+
+
+/* ══════════════════════════════════════════════
+   DECORATIVE WATERMARK CIRCLES
+══════════════════════════════════════════════ */
+
+/* Base — shared position/shape */
+.watermark {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+}
+
+/* Modifiers — size/position variants */
+.watermark--1 { width: 600px; height: 600px; top: -200px; right: -100px; }
+.watermark--2 { width: 400px; height: 400px; top: -80px;  right: 140px; }
+.watermark--3 { width: 220px; height: 220px; top: 20px;   right: 300px; }
+
+
+/* ══════════════════════════════════════════════
+   NO RESULTS EMPTY STATE
+══════════════════════════════════════════════ */
+
+.empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-20);
+    gap: var(--space-4);
+    text-align: center;
+    color: var(--color-muted);
+}
+
+.empty-state__icon { font-size: 40px; opacity: 0.35; }
+.empty-state__title { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
+.empty-state__body  { font-size: var(--font-size-base); }

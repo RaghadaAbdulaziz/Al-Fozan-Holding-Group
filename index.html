@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Al Fozan Holding Group</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css" />
+
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/utilities.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/sections.css" />
+</head>
+
+<body class="page">
+
+<!-- ══════════════════════════════════════════
+     HERO PAGE — index.html
+     This page contains ONLY the hero section.
+     Companies listing → companies.html
+     Company detail   → company.html
+════════════════════════════════════════════ -->
+
+<section class="hero">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar--brand">
+        <div class="navbar__logo">
+            <span class="navbar__logo-main">AL FOZAN</span>
+            <span class="navbar__logo-sub">HOLDING</span>
+        </div>
+        <ul class="navbar__links">
+            <li><a class="navbar__link" href="index.html">Home</a></li>
+            <li><a class="navbar__link" href="index.html#about">About</a></li>
+            <!-- Sectors links to the companies listing page -->
+            <li><a class="navbar__link" href="companies.html">Sectors</a></li>
+            <li><a class="navbar__link" href="index.html#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn--gold" href="companies.html">Explore Group</a>
+    </nav>
+
+    <div class="navbar__rule"></div>
+
+    <!-- Hero content: text left, image right -->
+    <div class="hero__content">
+
+        <div class="hero__text">
+
+            <div class="hero__eyebrow">
+                <span class="rule-gold"></span>
+                Al Fozan Holding Group
+            </div>
+
+            <!--
+              WHERE TO EDIT: change the h1 text below to update the hero headline.
+            -->
+            <h1 class="hero__headline">
+                Building a<br>Brighter Future
+            </h1>
+
+            <!--
+              WHERE TO EDIT: change the paragraph below to update the hero subtitle.
+              Keep it under ~180 characters so it doesn't overflow on mobile.
+            -->
+            <p class="hero__sub">
+                Built on decades of growth, Al Fozan Holding Group operates across key business sectors,
+                driving value through a diverse portfolio of companies.
+            </p>
+
+            <div class="hero__buttons">
+                <a class="btn btn--primary" href="companies.html">Explore Companies</a>
+                <a class="btn btn--outline" href="index.html#about">Learn More</a>
+            </div>
+
+        </div>
+
+        <!-- Right column: building sketch image
+             WHERE TO SWAP: replace "images/hero-banner.png" with your file. -->
+<!--        <div class="hero__image">-->
+<!--            <img-->
+<!--                    src="images/hero-banner.png"-->
+<!--                    alt="Al Fozan Holding Group headquarters building sketch"-->
+<!--            />-->
+<!--        </div>-->
+
+    </div>
+
+    <!-- Stats bar at bottom of hero
+         WHERE TO EDIT: change the span text to update numbers/labels. -->
+    <div class="hero__stats-bar">
+
+        <div class="hero__stat">
+            <span class="hero__stat-number">30+</span>
+            <span class="hero__stat-label">Sub-companies</span>
+        </div>
+
+        <div class="hero__stat-divider"></div>
+
+        <div class="hero__stat">
+            <span class="hero__stat-number">5</span>
+            <span class="hero__stat-label">Business Sectors</span>
+        </div>
+
+        <div class="hero__stat-divider"></div>
+
+        <div class="hero__stat">
+            <span class="hero__stat-number">60+</span>
+            <span class="hero__stat-label">Years of History</span>
+        </div>
+
+        <div class="hero__stat-divider"></div>
+
+        <div class="hero__stat">
+            <span class="hero__stat-number">KSA</span>
+            <span class="hero__stat-label">Headquarters</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="navbar navbar--brand" style="height:auto; padding: 2rem 120px; gap: 2rem; flex-wrap:wrap; align-items:flex-start;">
+    <div class="stack stack--xs">
+        <div class="navbar__logo">
+            <span class="navbar__logo-main">AL FOZAN</span>
+            <span class="navbar__logo-sub">HOLDING</span>
+        </div>
+        <p class="text-sm" style="color:rgba(245,239,230,0.65); max-width:280px; line-height:1.6;">
+            A diversified Saudi conglomerate operating across five major business sectors.
+        </p>
+    </div>
+    <div class="stack stack--xs" style="margin-left:auto;">
+        <span class="text-xs uppercase tracking-wide text-gold">Quick links</span>
+        <a class="navbar__link text-sm" href="companies.html">Sectors</a>
+        <a class="navbar__link text-sm" href="index.html#about">About Us</a>
+        <a class="navbar__link text-sm" href="index.html#contact">Contact</a>
+    </div>
+    <div class="stack stack--xs">
+        <span class="text-xs uppercase tracking-wide text-gold">Contact</span>
+        <span class="text-sm" style="color:rgba(245,239,230,0.65);">Al Khobar, Saudi Arabia</span>
+        <span class="text-sm" style="color:rgba(245,239,230,0.65);">info@alfozan-mock.example</span>
+    </div>
+</footer>
+<div style="background:#1A060A; padding:0.9rem 120px; font-size:11px; color:rgba(245,239,230,0.4); text-align:center;">
+    Mock-up for internship project purposes only &middot; Not affiliated with the official Al Fozan Holding website
+</div>
+
+</body>
+</html>

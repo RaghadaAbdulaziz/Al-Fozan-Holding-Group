@@ -1,0 +1,257 @@
+/* ==========================================================================
+   sections.css
+   Layer 5 — Page-level section compositions
+
+   SOFTWARE DESIGN PRINCIPLE: Composition over Inheritance
+   Sections are NOT new component classes — they are compositions of
+   existing tokens, utilities, layout primitives, and component classes
+   combined to build a full page section.
+
+   This layer is the ONLY place where layout + color + component rules
+   are intentionally combined (because a page section by nature needs
+   all three). Every other layer stays separated.
+
+   LISKOV SUBSTITUTION applied to sections:
+   Any section that accepts a .container inside it behaves consistently
+   regardless of which section it is. The .container contract is the same
+   everywhere — just the background/theme of the parent section changes.
+   ========================================================================== */
+
+
+/* ══════════════════════════════════════════════
+   HERO SECTION
+══════════════════════════════════════════════ */
+
+.hero {
+    background: var(--color-cream);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.hero__content {
+    display: flex;
+    align-items: center;
+    padding: var(--space-20) var(--gutter-page) var(--space-16);
+    gap: var(--space-16);
+    min-height: 620px;
+    position: relative;
+
+    /* Full-width background image — matches the reference.
+       The sketch PNG (transparent bg) sits over the page background,
+       anchored to the right edge exactly like alfozan.com. */
+    background-image:
+            linear-gradient(to right, var(--color-cream) 38%, transparent 62%),
+            url('../images/hero-banner.png');
+    background-size: 100%, auto 100%;
+    background-position: left center, right center;
+    background-repeat: no-repeat, no-repeat;
+}
+
+/* Left text column — no longer competes with a right image column */
+.hero__text {
+    flex: 0 0 480px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    position: relative;
+    z-index: 2;
+}
+
+.hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wider);
+    text-transform: uppercase;
+    color: var(--color-gold-dark);
+}
+
+.hero__headline {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    color: var(--color-charcoal);
+}
+
+.hero__sub {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-muted);
+    max-width: 460px;
+}
+
+.hero__buttons {
+    display: flex;
+    gap: var(--space-4);
+}
+
+/* Right column image — hidden.
+   The image is now set as background-image on .hero__content
+   so it spans the full hero width exactly like the reference. */
+.hero__image {
+    display: none;
+}
+
+.hero__image img {
+    display: none;
+}
+
+/* Stats bar at the bottom of the hero */
+.hero__stats-bar {
+    background: var(--color-burgundy-dark);
+    display: flex;
+    align-items: center;
+}
+
+.hero__stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 0;
+    gap: var(--space-1);
+}
+
+.hero__stat-number {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-cream);
+}
+
+.hero__stat-label {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+}
+
+.hero__stat-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--color-gold);
+    opacity: 0.4;
+    flex-shrink: 0;
+}
+
+
+/* ══════════════════════════════════════════════
+   COMPANIES SECTION
+══════════════════════════════════════════════ */
+
+/* Dark burgundy header band — matches reference navbar/header color */
+.companies-header {
+    background: var(--color-burgundy);
+    padding: 100px var(--gutter-page) var(--space-20);
+    position: relative;
+    overflow: hidden;
+}
+
+.companies-header__inner {
+    position: relative;
+    z-index: 1;
+    max-width: var(--content-max);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+}
+
+/* Stats bar */
+.companies-stats {
+    background: var(--color-burgundy-dark);
+    display: flex;
+    align-items: center;
+}
+
+.companies-stats__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) 0;
+    gap: var(--space-2);
+}
+
+.companies-stats__number {
+    font-size: var(--font-size-display);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    color: var(--color-cream);
+}
+
+.companies-stats__label {
+    font-size: 11px;
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-gold);
+}
+
+.companies-stats__divider {
+    width: 1px;
+    height: 100px;
+    background: var(--color-gold);
+    opacity: 0.4;
+    flex-shrink: 0;
+}
+
+/* Cream grid area */
+.companies-grid {
+    background: var(--color-cream-light);
+    padding: var(--space-20) var(--gutter-page);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+}
+
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+   Single breakpoint — mobile adjustments only.
+   Extend with more breakpoints as needed (open for extension).
+══════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+    :root {
+        --gutter-page: var(--space-5);
+    }
+
+    .hero__content {
+        flex-direction: column;
+        min-height: unset;
+        padding: var(--space-10) var(--space-5);
+    }
+
+    .hero__text { flex: unset; }
+
+    .hero__image { display: none; }
+
+    .layout-split { flex-direction: column; }
+
+    .sector__cards {
+        grid-template-columns: 1fr;
+    }
+
+    .companies-header {
+        padding: var(--space-16) var(--space-5) var(--space-12);
+    }
+
+    .companies-stats__number {
+        font-size: var(--font-size-2xl);
+    }
+
+    .companies-grid {
+        padding: var(--space-12) var(--space-5);
+    }
+
+    .hero__headline,
+    .companies-header .headline-group__title {
+        font-size: var(--font-size-2xl);
+    }
+}

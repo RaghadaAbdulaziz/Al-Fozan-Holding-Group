@@ -1,0 +1,136 @@
+/* ==========================================================================
+   layout.css
+   Layer 3 — Layout primitives
+
+   SOFTWARE DESIGN PRINCIPLE: Separation of Concerns
+   Layout classes know ONLY about structure — flex, grid, padding, width.
+   They are completely decoupled from color, brand, and typography.
+   This means you can swap the visual theme of any section without
+   touching the layout, and change the layout without touching the theme.
+
+   INTERFACE SEGREGATION PRINCIPLE:
+   Each layout primitive exposes only what it needs. A .page-section does
+   not know what goes inside it. A .grid-2col does not know what color
+   the cards inside it are. They are minimal, composable contracts.
+   ========================================================================== */
+
+/* ── Page wrapper ─────────────────────────────────────────────────────────── */
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ── Section ─────────────────────────────────────────────────────────────── */
+/* A full-width horizontal band of page content */
+.section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+/* Centres content with page gutters. Composable with .section. */
+.container {
+    width: 100%;
+    max-width: var(--content-max);
+    padding-left: var(--gutter-page);
+    padding-right: var(--gutter-page);
+}
+
+/* ── Content pad ─────────────────────────────────────────────────────────── */
+/* Standard vertical rhythm for a padded content block */
+.content-pad      { padding: var(--space-20) var(--gutter-page); }
+.content-pad--lg  { padding: var(--space-24) var(--gutter-page) var(--space-20); }
+.content-pad--sm  { padding: var(--space-12) var(--gutter-page); }
+
+/* ── Split layout ────────────────────────────────────────────────────────── */
+/* Two-column side-by-side layout (e.g. hero text + image) */
+.layout-split {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    min-height: 620px;
+}
+
+.layout-split__primary {
+    flex: 0 0 540px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    position: relative;
+    z-index: 2;
+}
+
+.layout-split__secondary {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Stack ───────────────────────────────────────────────────────────────── */
+/* Vertical stack with consistent gap — the workhorse layout primitive */
+.stack      { display: flex; flex-direction: column; gap: var(--space-6); }
+.stack--xs  { display: flex; flex-direction: column; gap: var(--space-2); }
+.stack--sm  { display: flex; flex-direction: column; gap: var(--space-4); }
+.stack--lg  { display: flex; flex-direction: column; gap: var(--space-10); }
+.stack--xl  { display: flex; flex-direction: column; gap: var(--space-16); }
+
+/* ── Cluster ─────────────────────────────────────────────────────────────── */
+/* Horizontal group of items that wraps */
+.cluster    { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.cluster--lg{ display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+
+/* ── Row ─────────────────────────────────────────────────────────────────── */
+/* Non-wrapping horizontal row */
+.row         { display: flex; align-items: center; }
+.row--between{ display: flex; align-items: center; justify-content: space-between; }
+.row--center { display: flex; align-items: center; justify-content: center; }
+
+/* ── Grids ───────────────────────────────────────────────────────────────── */
+.grid-2col {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+}
+
+.grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+}
+
+.grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-4);
+}
+
+/* ── Stats row ───────────────────────────────────────────────────────────── */
+/* Equal-width horizontal band of stat blocks */
+.stats-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.stats-row__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) 0;
+    gap: var(--space-2);
+}
+
+/* ── Watermark circles ───────────────────────────────────────────────────── */
+/* Purely decorative positioned circles — layout concern, not visual */
+.watermark-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+}
