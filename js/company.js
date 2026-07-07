@@ -1,91 +1,180 @@
 /* ==========================================================================
    company.js
-   Builds the sub-company detail page (company.html): reads which company
-   to show from the URL (e.g. company.html?id=madar-building), renders its
-   info, contact details, and notable project (if it has one), and wires
-   up the "File a complaint" / "Apply for a job" buttons and forms.
+
+   SOFTWARE DESIGN PRINCIPLES:
+   - Single Responsibility: each function does exactly one thing
+   - Open/Closed: add new form behaviour by adding new init functions,
+     never by modifying existing ones
    ========================================================================== */
 
+'use strict';
+
+/* ── URL helpers ─────────────────────────────────────────────────────────── */
 function getCompanyIdFromUrl() {
-    var params = new URLSearchParams(window.location.search);
-    return params.get("id");
+    return new URLSearchParams(window.location.search).get('id');
 }
 
 function findCompanyById(id) {
-    return getAllCompanies().find(function (company) {
-        return company.id === id;
-    });
+    return getAllCompanies().find(c => c.id === id);
 }
 
+/* ── Logo renderer ───────────────────────────────────────────────────────── */
+function renderLogo(company) {
+    if (company.logo && company.logo.trim() !== '') {
+        return `<img class="badge badge--brand badge--lg"
+                 src="${company.logo}"
+                 alt="${company.name} logo"
+                 onerror="this.outerHTML='<div class=\\'badge badge--ghost badge--lg\\'>${company.initials}</div>'">`;
+    }
+    return `<div class="badge badge--ghost badge--lg">${company.initials}</div>`;
+}
+
+/* ── Render company header (logo, name, sector, description) ─────────────── */
 function renderCompanyHeader(company) {
-    document.getElementById("breadcrumb").innerHTML =
-        'Home <i class="ti ti-chevron-right"></i> ' +
-        company.sectorName +
-        ' <i class="ti ti-chevron-right"></i> ' +
-        company.name;
-
-    document.getElementById("company-logo").innerHTML = renderLogo(company);
-    document.getElementById("sector-tag").textContent = company.sectorName;
-    document.getElementById("company-name").textContent = company.name;
-    document.getElementById("company-description").textContent = company.description;
-
-    document.getElementById("contact-phone").textContent = company.phone;
-    document.getElementById("contact-email").textContent = company.email;
-    document.getElementById("contact-address").textContent = company.address;
+    document.getElementById('breadcrumb-sector').textContent  = company.sectorName;
+    document.getElementById('breadcrumb-name').textContent    = company.name;
+    document.getElementById('company-logo').innerHTML         = renderLogo(company);
+    document.getElementById('company-sector-tag').textContent = company.sectorName;
+    document.getElementById('company-name').textContent       = company.name;
+    document.getElementById('company-desc').textContent       = company.description;
+    document.getElementById('company-overview').textContent   = company.description;
+    document.getElementById('contact-phone').textContent      = company.phone;
+    document.getElementById('contact-email').textContent      = company.email;
+    document.getElementById('contact-address').textContent    = company.address;
+    document.title = `Al Fozan — ${company.name}`;
 }
 
-/* The notable project section only renders if this company actually has
-   one set in data.js (company.notableProject is not null). Companies
-   without a notable project simply skip this section entirely. */
+/* ── Render notable project (hidden if none set in data.js) ──────────────── */
 function renderNotableProject(company) {
-    var section = document.getElementById("notable-project-section");
+    const section = document.getElementById('individual-project-section');
     if (!company.notableProject) {
-        section.style.display = "none";
+        section.style.display = 'none';
         return;
     }
-    section.style.display = "";
-    document.getElementById("project-title").textContent = company.notableProject.title;
-    document.getElementById("project-description").textContent = company.notableProject.description;
+    section.style.display = '';
+    document.getElementById('project-title').textContent = company.notableProject.title;
+    document.getElementById('project-desc').textContent  = company.notableProject.description;
 }
 
-/* Shows the chosen form (complaint or job) and hides the other one. */
+/* ── Upload zone: drag/drop + filename display ───────────────────────────── */
+/*
+   SRP: this function only handles ONE upload zone's UI feedback.
+   It is called once per zone — no global state, no side effects.
+*/
+function initUploadZone(inputId, filenameId, zoneId) {
+    const input    = document.getElementById(inputId);
+    const filename = document.getElementById(filenameId);
+    const zone     = document.getElementById(zoneId);
+    if (!input || !filename || !zone) return;
+
+    /* Show selected filename(s) */
+    function showFiles(files) {
+        if (!files || !files.length) return;
+        const names = [...files].map(f => f.name).join(', ');
+        filename.textContent = '📎 ' + names;
+        filename.classList.add('show');
+    }
+
+    /* File picker change */
+    input.addEventListener('change', () => showFiles(input.files));
+
+    /* Drag over — highlight zone */
+    zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('dragover');
+    });
+
+    /* Drag leave — remove highlight */
+    zone.addEventListener('dragleave', e => {
+        if (!zone.contains(e.relatedTarget)) {
+            zone.classList.remove('dragover');
+        }
+    });
+
+    /* Drop — assign files to the input and show names */
+    zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+            try {
+                input.files = e.dataTransfer.files;
+            } catch (err) {
+                /* some browsers don't allow assigning FileList — show name anyway */
+            }
+            showFiles(e.dataTransfer.files);
+        }
+    });
+}
+
+/* ── Reset upload zone back to its empty state ───────────────────────────── */
+function resetUploadZone(filenameId) {
+    const filename = document.getElementById(filenameId);
+    if (!filename) return;
+    filename.textContent = '';
+    filename.classList.remove('show');
+}
+
+/* ── Toggle forms open/closed when buttons are clicked ───────────────────── */
+/*
+   OCP: to add a new form toggle, add a new button/form pair here
+   without modifying the existing toggle logic.
+*/
 function setupActionButtons() {
-    document.getElementById("complaint-btn").addEventListener("click", function () {
-        document.getElementById("job-form").classList.remove("open");
-        document.getElementById("complaint-form").classList.toggle("open");
+    const complaintBtn  = document.getElementById('complaint-btn');
+    const jobBtn        = document.getElementById('job-btn');
+    const complaintForm = document.getElementById('complaint-form');
+    const jobForm       = document.getElementById('job-form');
+
+    complaintBtn.addEventListener('click', () => {
+        jobForm.classList.remove('open');
+        complaintForm.classList.toggle('open');
+        if (complaintForm.classList.contains('open')) {
+            complaintForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     });
 
-    document.getElementById("job-btn").addEventListener("click", function () {
-        document.getElementById("complaint-form").classList.remove("open");
-        document.getElementById("job-form").classList.toggle("open");
+    jobBtn.addEventListener('click', () => {
+        complaintForm.classList.remove('open');
+        jobForm.classList.toggle('open');
+        if (jobForm.classList.contains('open')) {
+            jobForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     });
 }
 
-/* There is no real back-end, so submitting either form does not send data
-   anywhere. It simply prevents the default page reload and shows an
-   on-screen confirmation message instead, as described in the project plan. */
+/* ── Form submission: show confirmation, reset fields + upload zones ─────── */
+/*
+   No real back-end — submission shows a confirmation message only,
+   as documented in the project plan (mock-up scope).
+*/
 function setupFormSubmissions() {
-    document.getElementById("complaint-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        document.getElementById("complaint-confirmation").classList.add("show");
-        event.target.reset();
+    document.getElementById('complaint-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        document.getElementById('complaint-confirmation').classList.add('show');
+        this.reset();
+        resetUploadZone('complaint-filename');
     });
 
-    document.getElementById("job-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        document.getElementById("job-confirmation").classList.add("show");
-        event.target.reset();
+    document.getElementById('job-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        document.getElementById('job-confirmation').classList.add('show');
+        this.reset();
+        resetUploadZone('job-filename');
+        resetUploadZone('job-extra-filename');
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    var id = getCompanyIdFromUrl();
-    var company = findCompanyById(id);
+/* ── Boot ────────────────────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    const id      = getCompanyIdFromUrl();
+    const company = findCompanyById(id);
 
     if (!company) {
-        document.getElementById("company-page-content").innerHTML =
-            "<p style='padding:2rem 32px;'>Company not found. Please go back to the " +
-            "<a href='index.html' style='color:#8C3A42;'>homepage</a> and select a sub-company.</p>";
+        document.getElementById('company-page-content').innerHTML =
+            `<p style="padding:2rem 32px;">
+        Company not found. Go back to
+        <a href="companies.html" style="color:#9D4349;">all companies</a>.
+       </p>`;
         return;
     }
 
@@ -93,4 +182,9 @@ document.addEventListener("DOMContentLoaded", function () {
     renderNotableProject(company);
     setupActionButtons();
     setupFormSubmissions();
+
+    /* Wire all three upload zones */
+    initUploadZone('complaint-doc',  'complaint-filename',  'complaint-upload-zone');
+    initUploadZone('job-cv',         'job-filename',        'job-upload-zone');
+    initUploadZone('job-extra',      'job-extra-filename',  'job-extra-zone');
 });

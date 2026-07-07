@@ -51,7 +51,7 @@ const sectors = [
                 id: "uhc",
                 name: "United Homeware Co.",
                 initials: "UHC",
-                logo: "images/logos/uhc.png", // e.g. "images/logos/uhc.png"
+                logo: "images/logos/uhc.png",
                 description:
                     "A subsidiary of Al Fozan Holding focused on home and houseware retail products.",
                 phone: "+966 13 894 0909",

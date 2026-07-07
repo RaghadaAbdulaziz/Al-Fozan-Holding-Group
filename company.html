@@ -226,6 +226,62 @@
 
     .form-confirmation.show { display: block; }
 
+    /* ── File upload drop zone ────────────────────────── */
+    .upload-zone {
+      border: 1.5px dashed var(--color-cream-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6) var(--space-4);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+      background: var(--color-cream-light);
+      position: relative;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--color-burgundy);
+      background: var(--color-burgundy-tint);
+    }
+
+    /* Hide the real file input — clicking the zone triggers it */
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-zone__icon {
+      font-size: 28px;
+      color: var(--color-burgundy);
+      margin-bottom: var(--space-2);
+    }
+
+    .upload-zone__text {
+      font-size: var(--font-size-md);
+      color: var(--color-charcoal);
+      font-weight: var(--font-weight-medium);
+    }
+
+    .upload-zone__hint {
+      font-size: var(--font-size-sm);
+      color: var(--color-muted);
+      margin-top: var(--space-1);
+    }
+
+    .upload-zone__filename {
+      font-size: var(--font-size-sm);
+      color: var(--color-burgundy);
+      font-weight: var(--font-weight-semibold);
+      margin-top: var(--space-2);
+      display: none;
+    }
+
+    .upload-zone__filename.show { display: block; }
+
     /* Breadcrumb */
     .breadcrumb {
       font-size: var(--font-size-md);
@@ -321,6 +377,34 @@
 ════════════════════════════════════════════ -->
 <div class="profile-body" id="company-page-content">
 
+  <!-- Overview -->
+  <div>
+    <h2 class="section-title" style="margin-bottom: 1rem;">Overview</h2>
+    <div style="background: var(--color-white); border: var(--border-default); border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--shadow-sm);">
+      <!--
+        WHERE TO EDIT: update the company description in js/data.js
+        under each company's "description" field.
+        company.js reads it and fills the paragraph below automatically.
+      -->
+      <p id="company-overview" style="font-size: var(--font-size-base); color: var(--color-muted); line-height: var(--line-height-relaxed); margin: 0;"></p>
+    </div>
+  </div>
+
+  <!-- Individual Project — hidden by company.js if none set in data.js -->
+  <div id="individual-project-section">
+    <h2 class="section-title" style="margin-bottom: 1rem;">Individual Project</h2>
+    <div class="project-card">
+      <div class="project-card__image">
+        <i class="ti ti-road"></i>
+      </div>
+      <div class="project-card__body">
+        <span class="project-card__label">Featured Project</span>
+        <div class="project-card__title" id="project-title">—</div>
+        <p class="project-card__desc" id="project-desc">—</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Contact info -->
   <div>
     <h2 class="section-title" style="margin-bottom: 1rem;">Contact</h2>
@@ -336,21 +420,6 @@
       <div class="contact-card">
         <i class="ti ti-map-pin contact-card__icon"></i>
         <span id="contact-address">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Notable project — hidden by company.js if none exists in data.js -->
-  <div id="notable-project-section">
-    <h2 class="section-title" style="margin-bottom: 1rem;">Notable Project</h2>
-    <div class="project-card">
-      <div class="project-card__image">
-        <i class="ti ti-road"></i>
-      </div>
-      <div class="project-card__body">
-        <span class="project-card__label">Featured Project</span>
-        <div class="project-card__title" id="project-title">—</div>
-        <p class="project-card__desc" id="project-desc">—</p>
       </div>
     </div>
   </div>
@@ -387,12 +456,22 @@
       <textarea id="complaint-details" rows="4" required placeholder="Describe your complaint…"></textarea>
     </div>
 
+    <!-- Supporting document upload -->
+    <div class="form-field">
+      <label>Supporting document <span style="color:var(--color-muted);font-weight:400;">(optional)</span></label>
+      <div class="upload-zone" id="complaint-upload-zone">
+        <input type="file" id="complaint-doc"
+               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+               aria-label="Upload supporting document" />
+        <div class="upload-zone__icon"><i class="ti ti-upload"></i></div>
+        <div class="upload-zone__text">Click to upload or drag and drop</div>
+        <div class="upload-zone__hint">PDF, Word, or image — max 10 MB</div>
+        <div class="upload-zone__filename" id="complaint-filename"></div>
+      </div>
+    </div>
+
     <button type="submit" class="btn btn--primary">Submit Complaint</button>
 
-    <!--
-      No real back-end — submission shows this message only.
-      See company.js → setupFormSubmissions().
-    -->
     <div class="form-confirmation" id="complaint-confirmation">
       ✓ Thank you. Your complaint has been recorded.
       <span style="display:block;font-size:11px;margin-top:4px;opacity:.7;">(Mock-up only — nothing was actually sent.)</span>
@@ -415,10 +494,34 @@
       <label for="job-position">Position applying for</label>
       <input type="text" id="job-position" required placeholder="e.g. Software Engineer" />
     </div>
+
+    <!-- CV / Résumé upload -->
     <div class="form-field">
-      <label for="job-cv">CV / Résumé</label>
-      <input type="file" id="job-cv" accept=".pdf,.doc,.docx" />
-      <small style="color:var(--color-muted);font-size:11px;">File upload is not functional in this mock-up.</small>
+      <label>CV / Resume <span style="color:var(--color-burgundy);font-weight:400;">*</span></label>
+      <div class="upload-zone" id="job-upload-zone">
+        <input type="file" id="job-cv"
+               accept=".pdf,.doc,.docx"
+               aria-label="Upload your CV or résumé" />
+        <div class="upload-zone__icon"><i class="ti ti-file-cv"></i></div>
+        <div class="upload-zone__text">Click to upload or drag and drop</div>
+        <div class="upload-zone__hint">PDF or Word only — max 10 MB</div>
+        <div class="upload-zone__filename" id="job-filename"></div>
+      </div>
+    </div>
+
+    <!-- Additional documents -->
+    <div class="form-field">
+      <label>Additional documents <span style="color:var(--color-muted);font-weight:400;">(optional)</span></label>
+      <div class="upload-zone" id="job-extra-zone">
+        <input type="file" id="job-extra"
+               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+               multiple
+               aria-label="Upload additional documents" />
+        <div class="upload-zone__icon"><i class="ti ti-paperclip"></i></div>
+        <div class="upload-zone__text">Click to upload or drag and drop</div>
+        <div class="upload-zone__hint">Certificates, portfolio, or references — multiple files allowed</div>
+        <div class="upload-zone__filename" id="job-extra-filename"></div>
+      </div>
     </div>
 
     <button type="submit" class="btn btn--primary">Submit Application</button>
@@ -466,5 +569,51 @@
 -->
 <script src="js/data.js"></script>
 <script src="js/company.js"></script>
+<script>
+  /* ── Upload zone behaviour ──────────────────────────────────────────
+     SRP: this block only handles upload zone UI feedback.
+     It does NOT submit anything — this is a mock-up.
+  ──────────────────────────────────────────────────────────────────── */
+  function initUploadZone(inputId, filenameId, zoneId) {
+    const input    = document.getElementById(inputId);
+    const filename = document.getElementById(filenameId);
+    const zone     = document.getElementById(zoneId);
+    if (!input || !filename || !zone) return;
+
+    /* Show filename when user picks a file */
+    input.addEventListener('change', () => {
+      const files = [...input.files];
+      if (!files.length) return;
+      const names = files.map(f => f.name).join(', ');
+      filename.textContent = '📎 ' + names;
+      filename.classList.add('show');
+    });
+
+    /* Drag-over highlight */
+    zone.addEventListener('dragover', e => {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+
+    zone.addEventListener('dragleave', () => {
+      zone.classList.remove('dragover');
+    });
+
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initUploadZone('complaint-doc',   'complaint-filename',   'complaint-upload-zone');
+    initUploadZone('job-cv',          'job-filename',         'job-upload-zone');
+    initUploadZone('job-extra',       'job-extra-filename',   'job-extra-zone');
+  });
+</script>
 </body>
 </html>
