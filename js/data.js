@@ -39,7 +39,7 @@ const sectors = [
                 id: "uec",
                 name: "United Electronics Co.",
                 initials: "UEC",
-                logo: "", // e.g. "images/logos/uec.png"
+                logo: "images/logos/uec.png",
                 description:
                     "A subsidiary of Al Fozan Holding specialising in consumer electronics retail across Saudi Arabia.",
                 phone: "+966 13 894 0909",
